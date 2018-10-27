@@ -2,6 +2,7 @@ package golangutil
 
 import (
 	"bytes"
+	"compress/gzip"
 	"context"
 	"crypto/tls"
 	"encoding/json"
@@ -168,7 +169,16 @@ func (c *HttpClient) Request(ctx context.Context, req *http.Request) (resp []byt
 		log.Println("StatusInternalServerError - Status Internal ServerError error(%v)", err)
 		return
 	}
-	resp, err = ioutil.ReadAll(response.Body)
+	if response.Header.Get("Content-Encoding") == "gzip" {
+		compressedReader, e := gzip.NewReader(response.Body)
+		if e != nil {
+			err = e
+			return
+		}
+		resp, err = ioutil.ReadAll(compressedReader)
+	} else {
+		resp, err = ioutil.ReadAll(response.Body)
+	}
 	return
 }
 
