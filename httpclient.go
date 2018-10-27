@@ -69,7 +69,7 @@ func NewHTTPClient(c *Config) *HttpClient {
 }
 
 // Get makes a HTTP GET request to provided URL with context passed in
-func (c *HttpClient) Get(ctx context.Context, url string, headers http.Header, res interface{}) (resp []byte, err error) {
+func (c *HttpClient) Get(ctx context.Context, url string, headers http.Header) (resp []byte, err error) {
 	request, err := http.NewRequest(http.MethodGet, url, nil)
 	if err != nil {
 		err = errors.New("GET - request creation failed:" + err.Error())
@@ -78,11 +78,11 @@ func (c *HttpClient) Get(ctx context.Context, url string, headers http.Header, r
 
 	request.Header = headers
 
-	return c.Request(ctx, request, res)
+	return c.Request(ctx, request)
 }
 
 // Post makes a HTTP POST request to provided URL with context passed in
-func (c *HttpClient) Post(ctx context.Context, url, contentType string, headers http.Header, param, res interface{}) (resp []byte, err error) {
+func (c *HttpClient) Post(ctx context.Context, url, contentType string, headers http.Header, param interface{}) (resp []byte, err error) {
 	request, err := http.NewRequest(http.MethodPost, url, reqBody(contentType, param))
 	if err != nil {
 		err = errors.New("GET - request creation failed:" + err.Error())
@@ -94,11 +94,11 @@ func (c *HttpClient) Post(ctx context.Context, url, contentType string, headers 
 	headers.Set("Content-Type", contentType)
 	request.Header = headers
 
-	return c.Request(ctx, request, res)
+	return c.Request(ctx, request)
 }
 
 // Put makes a HTTP PUT request to provided URL with context passed in
-func (c *HttpClient) Put(ctx context.Context, url, contentType string, headers http.Header, param, res interface{}) (resp []byte, err error) {
+func (c *HttpClient) Put(ctx context.Context, url, contentType string, headers http.Header, param interface{}) (resp []byte, err error) {
 	request, err := http.NewRequest(http.MethodPut, url, reqBody(contentType, param))
 	if err != nil {
 		err = errors.New("GET - request creation failed:" + err.Error())
@@ -111,11 +111,11 @@ func (c *HttpClient) Put(ctx context.Context, url, contentType string, headers h
 	headers.Set("Content-Type", contentType)
 	request.Header = headers
 
-	return c.Request(ctx, request, res)
+	return c.Request(ctx, request)
 }
 
 // Patch makes a HTTP PATCH request to provided URL with context passed in
-func (c *HttpClient) Patch(ctx context.Context, url, contentType string, headers http.Header, param, res interface{}) (resp []byte, err error) {
+func (c *HttpClient) Patch(ctx context.Context, url, contentType string, headers http.Header, param interface{}) (resp []byte, err error) {
 	request, err := http.NewRequest(http.MethodPatch, url, reqBody(contentType, param))
 	if err != nil {
 		err = errors.New("GET - request creation failed:" + err.Error())
@@ -128,11 +128,11 @@ func (c *HttpClient) Patch(ctx context.Context, url, contentType string, headers
 	headers.Set("Content-Type", contentType)
 	request.Header = headers
 
-	return c.Request(ctx, request, res)
+	return c.Request(ctx, request)
 }
 
 // Delete makes a HTTP DELETE request to provided URL with context passed in
-func (c *HttpClient) Delete(ctx context.Context, url, contentType string, headers http.Header, param, res interface{}) (resp []byte, err error) {
+func (c *HttpClient) Delete(ctx context.Context, url, contentType string, headers http.Header, param interface{}) (resp []byte, err error) {
 	request, err := http.NewRequest(http.MethodDelete, url, nil)
 	if err != nil {
 		err = errors.New("GET - request creation failed:" + err.Error())
@@ -145,10 +145,10 @@ func (c *HttpClient) Delete(ctx context.Context, url, contentType string, header
 	headers.Set("Content-Type", contentType)
 	request.Header = headers
 
-	return c.Request(ctx, request, res)
+	return c.Request(ctx, request)
 }
 
-func (c *HttpClient) Request(ctx context.Context, req *http.Request, res interface{}) (resp []byte, err error) {
+func (c *HttpClient) Request(ctx context.Context, req *http.Request) (resp []byte, err error) {
 	var (
 		response *http.Response
 		cancel   func()
